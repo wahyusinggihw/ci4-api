@@ -14,4 +14,41 @@ class User extends BaseController
         $users = new UserModel();
         return $this->respond(['users' => $users->findAll()], 200);
     }
+
+    public function update()
+    {
+
+
+        $email = $this->request->getVar('email');
+        $users = new UserModel();
+
+        $user = $users->where('email', $email)->first();
+
+        $rules = [
+            'new_username' => 'required|min_length[3]|max_length[20]|is_unique[users.username]',
+        ];
+
+        if ($this->validate($rules)) {
+            // update data
+            $users = new UserModel();
+            $data = [
+                'username' => $this->request->getVar('new_username'),
+                'updated_at' => date('Y-m-d H:i:s')
+            ];
+            $users->where('email', $email)->set($data)->update();
+
+            return $this->respond([
+                'status' => true,
+                'message' => 'User updated'
+            ], 200);
+        } else {
+            $response = [
+                'status' => false,
+                'message' => $this->validator->getErrors()
+            ];
+            return $this->fail($response, 409);
+
+            // $users->update($data);
+        }
+    }
 }
