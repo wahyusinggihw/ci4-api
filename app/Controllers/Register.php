@@ -5,7 +5,6 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use CodeIgniter\API\ResponseTrait;
 use App\Models\UserModel;
-use \Firebase\JWT\JWT;
 
 class Register extends BaseController
 {

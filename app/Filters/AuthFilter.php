@@ -28,11 +28,7 @@ class AuthFilter implements FilterInterface
      */
     public function before(RequestInterface $request, $arguments = null)
     {
-        $key = getenv('JWT_SECRET_KEY');
-
-        $header = $request->getServer('HTTP_AUTHORIZATION');
-
-        if (!$header) {
+        if ($_SESSION['isLogin'] != true) {
             $response = service('response');
             $response->setJSON([
                 'status' => false,
@@ -42,19 +38,29 @@ class AuthFilter implements FilterInterface
             return $response->setStatusCode(ResponseInterface::HTTP_UNAUTHORIZED);
         }
 
-        try {
-            $token = explode(" ", $header)[1];
-            $decoded = JWT::decode($token, new Key($key, 'HS256'));
-        } catch (\Exception $e) {
-            //throw $th;
-            $response = service('response');
-            $response->setJSON([
-                'status' => false,
-                'message' => 'Token invalid: ' . $e->getMessage()
-            ], 401);
+        // if (!$header) {
+        //     $response = service('response');
+        //     $response->setJSON([
+        //         'status' => false,
+        //         'message' => 'Access denied'
+        //     ], 401);
 
-            return $response->setStatusCode(ResponseInterface::HTTP_UNAUTHORIZED);
-        }
+        //     return $response->setStatusCode(ResponseInterface::HTTP_UNAUTHORIZED);
+        // }
+
+        // try {
+        //     $token = explode(" ", $header)[1];
+        //     $decoded = JWT::decode($token, new Key($key, 'HS256'));
+        // } catch (\Exception $e) {
+        //     //throw $th;
+        //     $response = service('response');
+        //     $response->setJSON([
+        //         'status' => false,
+        //         'message' => 'Token invalid: ' . $e->getMessage()
+        //     ], 401);
+
+        //     return $response->setStatusCode(ResponseInterface::HTTP_UNAUTHORIZED);
+        // }
 
 
         ////////////////////////////

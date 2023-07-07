@@ -33,7 +33,8 @@ $routes->get('/', 'Home::index');
 $routes->group('api', function ($routes) {
     $routes->post('register', 'Register::index');
     $routes->post('login', 'Login::index');
-    $routes->get('users', 'User::index', ['Filter' => 'authFilter']);
+    $routes->post('logout', 'Login::logout');
+    $routes->get('users', 'User::index', ['filter' => 'authFilter']);
 });
 
 /*
