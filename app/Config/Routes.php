@@ -35,6 +35,7 @@ $routes->group('api', function ($routes) {
     $routes->post('login', 'Login::index');
     $routes->get('users', 'User::index', ['Filter' => 'authFilter']);
     $routes->post('user/update', 'User::update', ['Filter' => 'authFilter']);
+    $routes->post('user/delete/', 'User::delete', ['Filter' => 'authFilter']);
 });
 
 /*

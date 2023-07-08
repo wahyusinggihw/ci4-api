@@ -22,7 +22,7 @@ class User extends BaseController
         $email = $this->request->getVar('email');
         $users = new UserModel();
 
-        $user = $users->where('email', $email)->first();
+        $user = $users->where('email', $email);
 
         $rules = [
             'new_username' => 'required|min_length[3]|max_length[20]|is_unique[users.username]',
@@ -35,7 +35,7 @@ class User extends BaseController
                 'username' => $this->request->getVar('new_username'),
                 'updated_at' => date('Y-m-d H:i:s')
             ];
-            $users->where('email', $email)->set($data)->update();
+            $user->set($data)->update();
 
             return $this->respond([
                 'status' => true,
@@ -47,8 +47,51 @@ class User extends BaseController
                 'message' => $this->validator->getErrors()
             ];
             return $this->fail($response, 409);
-
-            // $users->update($data);
         }
+    }
+
+    public function delete()
+    {
+        $email = $this->request->getVar('email');
+        $users = new UserModel();
+        $user = $users->where('email', $email)->first();
+
+        $rule = [
+            'email' => 'required'
+        ];
+
+        if ($this->validate($rule)) {
+            if ($user != null) {
+                $users->where('email', $email)->delete();
+                return $this->respond([
+                    'status' => true,
+                    'message' => 'User deleted.'
+                ], 200);
+            } else {
+                return $this->respond([
+                    'status' => true,
+                    'message' => 'User not found.'
+                ], 404);
+            }
+        } else {
+            $response = [
+                'status' => false,
+                'message' => $this->validator->getErrors()
+            ];
+            return $this->fail($response, 409);
+        }
+
+
+        // try {
+        //     $user->delete();
+        // } catch (\Exception $e) {
+        //     //throw $th;
+        //     var_dump($e);
+        //     die;
+        // }
+
+
+        // $users->
+
     }
 }
