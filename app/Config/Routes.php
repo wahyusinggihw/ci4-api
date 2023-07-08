@@ -33,9 +33,9 @@ $routes->get('/', 'Home::index');
 $routes->group('api', function ($routes) {
     $routes->post('register', 'Register::index');
     $routes->post('login', 'Login::index');
-    $routes->get('users', 'User::index', ['Filter' => 'authFilter']);
-    $routes->post('user/update', 'User::update', ['Filter' => 'authFilter']);
-    $routes->post('user/delete/', 'User::delete', ['Filter' => 'authFilter']);
+    $routes->get('users', 'User::index', ['filter' => 'authFilter']);
+    $routes->post('user/update', 'User::update', ['filter' => 'authFilter']);
+    $routes->post('user/delete/', 'User::delete', ['filter' => 'authFilter']);
 });
 
 /*

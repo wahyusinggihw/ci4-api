@@ -17,30 +17,36 @@ class User extends BaseController
 
     public function update()
     {
-
-
         $email = $this->request->getVar('email');
         $users = new UserModel();
 
-        $user = $users->where('email', $email);
+        $user = $users->where('email', $email)->first();
 
         $rules = [
-            'new_username' => 'required|min_length[3]|max_length[20]|is_unique[users.username]',
+            'new_username' => 'required|min_length[3]|max_length[20]',
         ];
 
         if ($this->validate($rules)) {
-            // update data
-            $users = new UserModel();
-            $data = [
-                'username' => $this->request->getVar('new_username'),
-                'updated_at' => date('Y-m-d H:i:s')
-            ];
-            $user->set($data)->update();
+            if ($user != null) {
+                // update data
+                $users = new UserModel();
+                $data = [
+                    'username' => $this->request->getVar('new_username'),
+                    'updated_at' => date('Y-m-d H:i:s')
+                ];
 
-            return $this->respond([
-                'status' => true,
-                'message' => 'User updated'
-            ], 200);
+                $users->where('email', $email)->set($data)->update();
+
+                return $this->respond([
+                    'status' => true,
+                    'message' => 'User updated'
+                ], 200);
+            } else {
+                return $this->respond([
+                    'status' => false,
+                    'message' => 'User not found.'
+                ], 404);
+            }
         } else {
             $response = [
                 'status' => false,
@@ -56,11 +62,11 @@ class User extends BaseController
         $users = new UserModel();
         $user = $users->where('email', $email)->first();
 
-        $rule = [
+        $rules = [
             'email' => 'required'
         ];
 
-        if ($this->validate($rule)) {
+        if ($this->validate($rules)) {
             if ($user != null) {
                 $users->where('email', $email)->delete();
                 return $this->respond([
@@ -80,18 +86,5 @@ class User extends BaseController
             ];
             return $this->fail($response, 409);
         }
-
-
-        // try {
-        //     $user->delete();
-        // } catch (\Exception $e) {
-        //     //throw $th;
-        //     var_dump($e);
-        //     die;
-        // }
-
-
-        // $users->
-
     }
 }
